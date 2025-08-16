@@ -25,26 +25,56 @@ if [ ! -f "$HOME/.zshrc" ] || [ ! -d "$HOME/.oh-my-zsh" ]; then
     exit 1
 fi
 
+# Detect platform
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM="macos"
+    print_status "macOS detected"
+elif command -v apt &> /dev/null; then
+    PLATFORM="linux"
+    print_status "Linux (Debian/Ubuntu) detected"
+else
+    print_error "This script supports Debian/Ubuntu Linux or macOS only"
+    exit 1
+fi
+
 # Install modern CLI tools
 print_status "Installing modern CLI replacements..."
-sudo apt update
-sudo apt install -y \
-    fd-find \
-    tree \
-    ncdu \
-    tldr \
-    jq \
-    neofetch \
-    cowsay \
-    fortune \
-    lolcat \
-    figlet \
-    cmatrix \
-    curl \
-    wget
+if [[ "$PLATFORM" == "macos" ]]; then
+    brew update
+    brew install \
+        fd \
+        tree \
+        ncdu \
+        tldr \
+        jq \
+        neofetch \
+        cowsay \
+        fortune \
+        lolcat \
+        figlet \
+        cmatrix \
+        curl \
+        wget
+elif [[ "$PLATFORM" == "linux" ]]; then
+    sudo apt update
+    sudo apt install -y \
+        fd-find \
+        tree \
+        ncdu \
+        tldr \
+        jq \
+        neofetch \
+        cowsay \
+        fortune \
+        lolcat \
+        figlet \
+        cmatrix \
+        curl \
+        wget
+fi
 
-# Install additional tools via snap (if available)
-if command -v snap &> /dev/null; then
+# Install additional tools via snap (if available - Linux only)
+if [[ "$PLATFORM" == "linux" ]] && command -v snap &> /dev/null; then
     print_status "Installing snap packages..."
     sudo snap install yq
 fi
@@ -102,26 +132,35 @@ fi
 
 # Install Nerd Fonts
 print_status "Installing additional Nerd Fonts..."
-FONT_DIR="$HOME/.local/share/fonts"
-mkdir -p "$FONT_DIR"
-cd "$FONT_DIR"
+if [[ "$PLATFORM" == "macos" ]]; then
+    # Use Homebrew fonts on macOS
+    brew tap homebrew/cask-fonts
+    brew install --cask \
+        font-fira-code-nerd-font \
+        font-hack-nerd-font \
+        font-jetbrains-mono-nerd-font
+elif [[ "$PLATFORM" == "linux" ]]; then
+    FONT_DIR="$HOME/.local/share/fonts"
+    mkdir -p "$FONT_DIR"
+    cd "$FONT_DIR"
 
-# Download popular fonts if they don't exist
-fonts=("FiraCode" "Hack" "JetBrainsMono")
-for font in "${fonts[@]}"; do
-    if [ ! -f "${font}.zip" ] && [ ! -d "${font}" ]; then
-        print_status "Downloading $font Nerd Font..."
-        wget -q "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/${font}.zip" || print_warning "Failed to download $font"
-        if [ -f "${font}.zip" ]; then
-            unzip -q "${font}.zip" -d "${font}/"
-            rm "${font}.zip"
+    # Download popular fonts if they don't exist
+    fonts=("FiraCode" "Hack" "JetBrainsMono")
+    for font in "${fonts[@]}"; do
+        if [ ! -f "${font}.zip" ] && [ ! -d "${font}" ]; then
+            print_status "Downloading $font Nerd Font..."
+            wget -q "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/${font}.zip" || print_warning "Failed to download $font"
+            if [ -f "${font}.zip" ]; then
+                unzip -q "${font}.zip" -d "${font}/"
+                rm "${font}.zip"
+            fi
         fi
-    fi
-done
+    done
 
-# Update font cache
-fc-cache -fv > /dev/null 2>&1
-print_success "Fonts installed and cache updated"
+    # Update font cache
+    fc-cache -fv > /dev/null 2>&1
+    print_success "Fonts installed and cache updated"
+fi
 
 # Create enhanced aliases file
 print_status "Creating enhanced aliases..."
@@ -314,9 +353,7 @@ if command -v delta > /dev/null; then
     export GIT_PAGER="delta"
 fi
 
-# Performance monitoring
-alias cpu_usage="grep 'cpu ' /proc/stat | awk '{usage=(\$2+\$4)*100/(\$2+\$3+\$4+\$5)} END {print usage \"%\"}'"
-alias memory_usage="free | grep Mem | awk '{printf(\"%.2f%%\", \$3/\$2 * 100.0)}'"
+# Performance monitoring (Linux only)\nif [[ \"$OSTYPE\" != \"darwin\"* ]]; then\n    alias cpu_usage=\"grep 'cpu ' /proc/stat | awk '{usage=(\\$2+\\$4)*100/(\\$2+\\$3+\\$4+\\$5)} END {print usage \"%\"}'\"\n    alias memory_usage=\"free | grep Mem | awk '{printf(\"%.2f%%\", \\$3/\\$2 * 100.0)}'\"\nfi
 
 # Better ls with exa
 if command -v exa > /dev/null; then
@@ -350,18 +387,52 @@ fi
 
 # Create a system info display function
 print_status "Creating system info display..."
+mkdir -p "$HOME/.local/bin"
 cat > "$HOME/.local/bin/sysinfo" << 'EOF'
 #!/bin/bash
 echo "🖥️  System Information"
 echo "===================="
-echo "OS: $(lsb_release -d | cut -f2)"
-echo "Kernel: $(uname -r)"
+
+# Cross-platform OS information
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "OS: macOS $(sw_vers -productVersion)"
+    echo "Kernel: $(uname -r)"
+    echo "Hardware: $(uname -m)"
+elif command -v lsb_release &> /dev/null; then
+    echo "OS: $(lsb_release -d | cut -f2)"
+    echo "Kernel: $(uname -r)"
+    echo "Hardware: $(uname -m)"
+else
+    echo "OS: $(uname -s)"
+    echo "Kernel: $(uname -r)"
+    echo "Hardware: $(uname -m)"
+fi
+
 echo "Shell: $SHELL"
 echo "Terminal: $TERM"
-echo "CPU: $(lscpu | grep 'Model name' | cut -d':' -f2 | xargs)"
-echo "Memory: $(free -h | grep '^Mem:' | awk '{print $3 "/" $2}')"
-echo "Disk: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 " used)"}')"
-echo "Uptime: $(uptime -p)"
+
+# CPU information (cross-platform)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "CPU: $(sysctl -n machdep.cpu.brand_string)"
+else
+    echo "CPU: $(lscpu | grep 'Model name' | cut -d':' -f2 | xargs)"
+fi
+
+# Memory information (cross-platform)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Memory: $(vm_stat | grep 'Pages active' | awk '{print $3}' | sed 's/\.//') KB"
+else
+    echo "Memory: $(free -h | grep '^Mem:' | awk '{print $3 "/" $2}')"
+fi
+
+# Disk usage (cross-platform)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Disk: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 " used)")')"
+else
+    echo "Disk: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 " used)")')"
+fi
+
+echo "Uptime: $(uptime | awk -F'up' '{print $2}' | awk -F',' '{print $1}')"
 echo "Load: $(uptime | awk -F'load average:' '{print $2}')"
 echo ""
 if command -v neofetch > /dev/null; then

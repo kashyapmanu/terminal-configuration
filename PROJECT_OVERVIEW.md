@@ -1,6 +1,6 @@
 # Terminal Configuration Project Overview
 
-This project contains a complete, production-ready terminal configuration that can transform any Ubuntu/Debian system into a powerful development environment.
+This project contains a complete, production-ready terminal configuration that can transform any Linux or macOS system into a powerful development environment.
 
 ## 📁 Project Structure
 
@@ -19,11 +19,13 @@ terminal-configuration/
 │   ├── .tmux.conf             # Tmux configuration with Dracula theme
 │   ├── aliases.zsh            # Custom aliases and functions
 │   ├── dev-env.zsh            # Development environment variables
-│   └── fzf.zsh                # FZF fuzzy finder configuration
+│   ├── fzf.zsh                # FZF fuzzy finder configuration
+│   └── platform.zsh           # Platform detection utilities
 │
 └── 🚀 Installation Scripts
     ├── install.sh             # Main installation script
-    └── install-advanced.sh    # Advanced enhancements installer
+    ├── install-advanced.sh    # Advanced enhancements installer
+    └── MACOS_SETUP.md         # macOS-specific setup guide
 ```
 
 ## 🎯 What This Project Provides
@@ -133,7 +135,7 @@ Follow step-by-step instructions in `README.md`
 - **Total overhead**: Minimal impact on system
 
 ### Compatibility
-- **OS Support**: Ubuntu 18.04+, Debian 10+
+- **OS Support**: Ubuntu 18.04+, Debian 10+, macOS 10.15+
 - **Terminal Emulators**: All major terminals
 - **Remote**: SSH, WSL2, Docker containers
 - **Fonts**: Works with or without Nerd Fonts

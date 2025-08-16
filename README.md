@@ -1,9 +1,9 @@
 # 🚀 Terminal Configuration
 
-A comprehensive, production-ready terminal configuration that transforms any Ubuntu/Debian system into a powerful development environment with modern tools and beautiful aesthetics.
+A comprehensive, production-ready terminal configuration that transforms any Linux or macOS system into a powerful development environment with modern tools and beautiful aesthetics.
 
 ![Terminal Preview](https://img.shields.io/badge/Terminal-Enhanced-brightgreen)
-![Platform](https://img.shields.io/badge/Platform-Ubuntu%20%7C%20Debian-orange)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green)
 
@@ -13,7 +13,7 @@ A comprehensive, production-ready terminal configuration that transforms any Ubu
 - **⚡ Enhanced Productivity**: 100+ aliases, smart autosuggestions, and syntax highlighting
 - **🛠️ Modern Tools**: exa, bat, ripgrep, fzf, and other CLI improvements
 - **🔧 Development Ready**: Pre-configured for Node.js, Python, Docker, Kubernetes, AWS
-- **📱 Cross-Platform**: Linux, macOS, WSL2 support with clipboard integration
+- **📱 Cross-Platform**: Linux and macOS support with clipboard integration
 - **🚀 One-Command Install**: Automated setup with backup and restore capabilities
 
 ## 🎯 Quick Start
@@ -34,6 +34,9 @@ cd terminal-configuration
 ### Option 3: Quick Setup (Experienced Users)
 See [QUICK_SETUP.md](QUICK_SETUP.md) for condensed instructions.
 
+### macOS-Specific Instructions
+See [MACOS_SETUP.md](MACOS_SETUP.md) for detailed macOS installation and configuration instructions.
+
 ## 📋 What You Get
 
 ### Core Components
@@ -49,14 +52,15 @@ See [QUICK_SETUP.md](QUICK_SETUP.md) for condensed instructions.
 - **Fuzzy Finding**: Fast file and directory navigation with preview
 - **Development Tools**: Language-specific configurations and shortcuts
 - **System Monitoring**: Built-in performance and resource monitoring
-- **Cross-Platform Clipboard**: Seamless copy/paste across different systems
+- **Cross-Platform Clipboard**: Seamless copy/paste across Linux and macOS
 
 ## 🛠️ System Requirements
 
-- **OS**: Ubuntu 18.04+ or Debian 10+
-- **Terminal**: Any modern terminal emulator
+- **OS**: Ubuntu 18.04+, Debian 10+, or macOS 10.15+ (Catalina)
+- **Terminal**: Any modern terminal emulator (Terminal.app, iTerm2, etc. on macOS)
 - **Font**: Nerd Font recommended (auto-installed)
 - **Internet**: Required for initial setup
+- **Package Manager**: APT for Linux, Homebrew for macOS (will be installed if missing)
 
 ## 📁 Project Structure
 
@@ -75,11 +79,13 @@ terminal-configuration/
 │   ├── .tmux.conf             # Tmux configuration
 │   ├── aliases.zsh            # Custom aliases and functions
 │   ├── dev-env.zsh            # Development environment
-│   └── fzf.zsh                # Fuzzy finder configuration
+│   ├── fzf.zsh                # Fuzzy finder configuration
+│   └── platform.zsh           # Platform detection utilities
 │
 └── 🚀 Installation Scripts
     ├── install.sh             # Main installer
-    └── install-advanced.sh    # Advanced features
+    ├── install-advanced.sh    # Advanced features
+    └── MACOS_SETUP.md         # macOS-specific setup guide
 ```
 
 ## 🎨 Customization
@@ -143,11 +149,12 @@ chmod +x install.sh install-advanced.sh
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ### Areas for Contribution
-- Platform support (macOS, Windows, other Linux distros)
+- Platform support (Windows, other Linux distros)
 - New tool integrations
 - Theme variations
 - Documentation improvements
 - Performance optimizations
+- macOS-specific enhancements
 
 ## 📊 Performance
 

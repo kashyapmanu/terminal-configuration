@@ -31,33 +31,66 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if running on Ubuntu/Debian
-if ! command -v apt &> /dev/null; then
-    print_error "This script is designed for Ubuntu/Debian systems with apt package manager"
+# Detect platform
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM="macos"
+    print_status "macOS detected"
+elif command -v apt &> /dev/null; then
+    PLATFORM="linux"
+    print_status "Linux (Debian/Ubuntu) detected"
+else
+    print_error "This script supports Debian/Ubuntu Linux or macOS only"
     exit 1
 fi
 
 # Update system
 print_status "Updating system packages..."
-sudo apt update && sudo apt upgrade -y
+if [[ "$PLATFORM" == "macos" ]]; then
+    # Install Homebrew if not present
+    if ! command -v brew &> /dev/null; then
+        print_status "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    brew update && brew upgrade
+elif [[ "$PLATFORM" == "linux" ]]; then
+    sudo apt update && sudo apt upgrade -y
+fi
 
 # Install Zsh
 print_status "Installing Zsh..."
-sudo apt install -y zsh zsh-common
+if [[ "$PLATFORM" == "macos" ]]; then
+    brew install zsh
+elif [[ "$PLATFORM" == "linux" ]]; then
+    sudo apt install -y zsh zsh-common
+fi
 
 # Install essential tools
 print_status "Installing essential command-line tools..."
-sudo apt install -y \
-    git \
-    curl \
-    wget \
-    fzf \
-    exa \
-    bat \
-    ripgrep \
-    htop \
-    tmux \
-    xclip
+if [[ "$PLATFORM" == "macos" ]]; then
+    brew install \
+        git \
+        curl \
+        wget \
+        fzf \
+        eza \
+        bat \
+        ripgrep \
+        htop \
+        tmux \
+        reattach-to-user-namespace
+elif [[ "$PLATFORM" == "linux" ]]; then
+    sudo apt install -y \
+        git \
+        curl \
+        wget \
+        fzf \
+        exa \
+        bat \
+        ripgrep \
+        htop \
+        tmux \
+        xclip
+fi
 
 # Install Oh My Zsh
 print_status "Installing Oh My Zsh..."
@@ -130,13 +163,23 @@ cp "$script_dir/.tmux.conf" "$HOME/.tmux.conf"
 cp "$script_dir/aliases.zsh" "$HOME/.oh-my-zsh/custom/aliases.zsh"
 cp "$script_dir/dev-env.zsh" "$HOME/.oh-my-zsh/custom/dev-env.zsh"
 cp "$script_dir/fzf.zsh" "$HOME/.oh-my-zsh/custom/fzf.zsh"
+cp "$script_dir/platform.zsh" "$HOME/.oh-my-zsh/custom/platform.zsh"
 
 print_success "Configuration files installed"
 
 # Set Zsh as default shell
 print_status "Setting Zsh as default shell..."
-if [ "$SHELL" != "$(which zsh)" ]; then
-    chsh -s $(which zsh)
+ZSH_PATH=$(which zsh)
+if [ "$SHELL" != "$ZSH_PATH" ]; then
+    if [[ "$PLATFORM" == "macos" ]]; then
+        # Add zsh to allowed shells if not present
+        if ! grep -q "$ZSH_PATH" /etc/shells; then
+            echo "$ZSH_PATH" | sudo tee -a /etc/shells
+        fi
+        chsh -s "$ZSH_PATH"
+    elif [[ "$PLATFORM" == "linux" ]]; then
+        chsh -s "$ZSH_PATH"
+    fi
     print_success "Zsh set as default shell"
 else
     print_warning "Zsh is already the default shell"

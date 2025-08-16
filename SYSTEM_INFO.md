@@ -1,9 +1,11 @@
 # System Information
 
-This file contains detailed information about the system where this terminal configuration was captured.
+This file contains detailed information about the Linux system where this terminal configuration was captured.
+
+*Note: This configuration also supports macOS. See MACOS_SETUP.md for macOS-specific information.*
 
 ## Operating System
-- **Distribution**: Ubuntu 22.04 LTS
+- **Distribution**: Ubuntu 22.04 LTS (Linux)
 - **Kernel**: Linux
 - **Architecture**: x86_64
 

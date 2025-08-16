@@ -42,3 +42,15 @@ fi
 # Local bin paths
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
+
+# Platform-specific paths
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Homebrew paths for Apple Silicon Macs
+    if [ -d "/opt/homebrew" ]; then
+        export PATH="/opt/homebrew/bin:$PATH"
+    fi
+    # Homebrew paths for Intel Macs
+    if [ -d "/usr/local/bin" ]; then
+        export PATH="/usr/local/bin:$PATH"
+    fi
+fi

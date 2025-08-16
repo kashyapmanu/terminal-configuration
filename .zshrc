@@ -73,3 +73,6 @@ export ARCHFLAGS="-arch $(uname -m)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Platform detection utilities
+[[ ! -f ~/.oh-my-zsh/custom/platform.zsh ]] || source ~/.oh-my-zsh/custom/platform.zsh

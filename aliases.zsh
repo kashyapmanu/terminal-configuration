@@ -75,7 +75,12 @@ fi
 
 # Network utilities
 alias myip='curl -s https://ipinfo.io/ip'
-alias ports='netstat -tulanp'
+# Cross-platform ports command
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ports='netstat -anp tcp | grep LISTEN'
+else
+    alias ports='netstat -tulanp'
+fi
 
 # File operations
 alias cp='cp -i'
@@ -87,22 +92,31 @@ alias mkdir='mkdir -pv'
 if command -v fdfind > /dev/null; then
     alias fd='fdfind'
     alias find='fdfind'
+elif command -v fd > /dev/null; then
+    alias find='fd'
 fi
 
 if command -v rg > /dev/null; then
     alias grep='rg'
 fi
 
+# Handle both bat and batcat (Linux vs macOS)
 if command -v batcat > /dev/null; then
     alias bat='batcat'
     alias cat='batcat'
     alias less='batcat'
+elif command -v bat > /dev/null; then
+    alias cat='bat'
+    alias less='bat'
 fi
 
 # FZF integration
 if command -v fzf > /dev/null; then
+    # Handle both bat and batcat for preview
     if command -v batcat > /dev/null; then
         alias fzfp='fzf --preview "batcat --color=always --style=numbers --line-range=:500 {}"'
+    elif command -v bat > /dev/null; then
+        alias fzfp='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
     else
         alias fzfp='fzf --preview "cat {}"'
     fi

@@ -16,13 +16,24 @@ if command -v fzf > /dev/null; then
         export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git --exclude node_modules'
         export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
         export FZF_ALT_C_COMMAND='fdfind --type d --hidden --follow --exclude .git --exclude node_modules'
+    elif command -v fd > /dev/null; then
+        export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude node_modules'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --exclude node_modules'
     fi
 
     # FZF key bindings and completion
+    # Linux paths
     [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
     [ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
     
+    # macOS paths
+    [ -f /opt/homebrew/share/fzf/key-bindings.zsh ] && source /opt/homebrew/share/fzf/key-bindings.zsh
+    [ -f /opt/homebrew/share/fzf/completion.zsh ] && source /opt/homebrew/share/fzf/completion.zsh
+    
+    [ -f /usr/local/share/fzf/shell/key-bindings.zsh ] && source /usr/local/share/fzf/shell/key-bindings.zsh
+    [ -f /usr/local/share/fzf/shell/completion.zsh ] && source /usr/local/share/fzf/shell/completion.zsh
+    
     # Alternative locations for different distributions
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-    [ -f /usr/local/share/fzf/shell/key-bindings.zsh ] && source /usr/local/share/fzf/shell/key-bindings.zsh
 fi

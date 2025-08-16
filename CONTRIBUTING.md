@@ -32,7 +32,7 @@ Thank you for your interest in contributing to this terminal configuration proje
 - **Environment**: Add to `dev-env.zsh` for development tools
 - **Documentation**: Update relevant `.md` files
 - **Scripts**: Make executable and add error handling
-- **Compatibility**: Test on Ubuntu/Debian systems
+- **Compatibility**: Test on Linux and macOS systems
 
 #### Code Style
 - Use clear, descriptive variable names
@@ -52,6 +52,7 @@ Before submitting:
 - Verify aliases and functions work correctly
 - Check compatibility with different terminal emulators
 - Ensure no conflicts with existing configurations
+- Test on both Linux and macOS if possible
 
 ### 📋 Pull Request Process
 1. Update documentation for any new features
@@ -61,7 +62,7 @@ Before submitting:
 5. Reference any related issues
 
 ### 🎯 Areas for Contribution
-- **Platform Support**: macOS, Windows WSL2, other Linux distros
+- **Platform Support**: Windows WSL2, other Linux distros
 - **Tool Integration**: New CLI tools and utilities
 - **Theme Variations**: Alternative Powerlevel10k configurations
 - **Language Support**: Additional programming language setups
