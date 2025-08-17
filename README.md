@@ -48,6 +48,7 @@ See [MACOS_SETUP.md](MACOS_SETUP.md) for detailed macOS installation and configu
 
 ### Key Features
 - **Smart Command Completion**: Context-aware suggestions based on history
+- **Comprehensive User Guide**: Detailed documentation of all tools and shortcuts ([USER_GUIDE.md](USER_GUIDE.md))
 - **Git Integration**: Branch status, commit info, and shortcuts in prompt
 - **Fuzzy Finding**: Fast file and directory navigation with preview
 - **Development Tools**: Language-specific configurations and shortcuts
@@ -68,6 +69,7 @@ See [MACOS_SETUP.md](MACOS_SETUP.md) for detailed macOS installation and configu
 terminal-configuration/
 ├── 📋 Documentation
 │   ├── README.md              # This file
+│   ├── USER_GUIDE.md          # Comprehensive user guide
 │   ├── QUICK_SETUP.md         # Fast installation guide
 │   ├── SYSTEM_INFO.md         # System specifications
 │   ├── ENHANCEMENTS.md        # Advanced improvements
@@ -104,6 +106,9 @@ Modify `~/.oh-my-zsh/custom/dev-env.zsh` for development tools.
 ### FZF Behavior
 Customize `~/.oh-my-zsh/custom/fzf.zsh` for fuzzy finding preferences.
 
+### Complete Tool Reference
+See [USER_GUIDE.md](USER_GUIDE.md) for a comprehensive reference of all tools, aliases, and shortcuts available in this configuration.
+
 ## 🔧 Advanced Features
 
 See [ENHANCEMENTS.md](ENHANCEMENTS.md) for additional tools and configurations:
@@ -112,6 +117,8 @@ See [ENHANCEMENTS.md](ENHANCEMENTS.md) for additional tools and configurations:
 - Development tool managers (nvm, rustup)
 - Security enhancements and SSH configuration
 - Performance monitoring and system information
+
+See [USER_GUIDE.md](USER_GUIDE.md) for a comprehensive reference of all tools and shortcuts.
 
 ## 🐛 Troubleshooting
 
