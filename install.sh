@@ -84,7 +84,7 @@ elif [[ "$PLATFORM" == "linux" ]]; then
         curl \
         wget \
         fzf \
-        exa \
+        eza \
         bat \
         ripgrep \
         htop \
